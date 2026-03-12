@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ENGG 111 — 50 MCQ Practice Test</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg:        #060d1a;
+    --card:      #0a1628;
+    --card2:     #0d1b2a;
+    --border:    #0f2040;
+    --border2:   #1e293b;
+    --text:      #e2e8f0;
+    --muted:     #64748b;
+    --dim:       #475569;
+    --mechanics: #f97316;
+    --thermo:    #ec4899;
+    --fluid:     #06b6d4;
+    --constr:    #84cc16;
+    --survey:    #a78bfa;
+    --correct:   #84cc16;
+    --wrong:     #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', Georgia, serif; font-size: 16px; min-height: 100vh; }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: flex; }
+
+  /* ── INTRO ── */
+  #s-intro { flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 20px; }
+  .intro-wrap { max-width: 960px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  @media(max-width:640px){ .intro-wrap{ grid-template-columns:1fr; } }
+  .badge { display: inline-block; background: #f9731620; color: var(--mechanics); border: 1px solid #f9731644; border-radius: 20px; padding: 3px 14px; font-size: 11px; letter-spacing: 2px; margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; }
+  .intro-h1 { font-size: 56px; font-weight: 700; line-height: 1; color: #f1f5f9; letter-spacing: -1px; margin-bottom: 4px; }
+  .intro-h2 { font-size: 20px; color: var(--muted); margin-bottom: 18px; font-weight: 400; }
+  .intro-desc { font-size: 15px; color: #94a3b8; line-height: 1.7; margin-bottom: 28px; max-width: 420px; }
+  .intro-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px; }
+  .istat { background: var(--card); border: 1px solid var(--border2); border-radius: 10px; padding: 14px; }
+  .istat-val { font-size: 24px; font-weight: 700; color: #f1f5f9; font-family: 'JetBrains Mono', monospace; display: block; }
+  .istat-lbl { font-size: 12px; color: var(--muted); display: block; margin-top: 3px; }
+  .start-btn { background: linear-gradient(135deg, #f97316, #ec4899); color: #fff; border: none; border-radius: 12px; padding: 14px 38px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Crimson Pro', serif; letter-spacing: .5px; transition: opacity .2s; }
+  .start-btn:hover { opacity: .88; }
+
+  .topics-title { font-size: 11px; font-weight: 700; color: var(--dim); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 14px; font-family: 'JetBrains Mono', monospace; }
+  .topic-card { border: 1px solid; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+  .topic-card-row { display: flex; align-items: center; gap: 8px; }
+  .topic-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .topic-card-name { font-size: 14px; color: #cbd5e1; flex: 1; }
+  .topic-cnt { font-size: 13px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+  .topic-mini-bar-bg { height: 4px; background: rgba(255,255,255,.08); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .topic-mini-bar { height: 4px; border-radius: 2px; }
+  .tip-box { background: var(--card); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 14px; margin-top: 16px; display: flex; gap: 10px; }
+  .tip-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ── TEST ── */
+  #s-test { flex-direction: column; align-items: center; min-height: 100vh; }
+  .topbar { position: sticky; top: 0; z-index: 50; width: 100%; background: rgba(6,13,26,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; }
+  .top-info-title { font-size: 14px; font-weight: 600; color: #f1f5f9; }
+  .top-info-sub { font-size: 11px; color: var(--dim); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+  .timer { font-size: 20px; font-weight: 700; font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; gap: 6px; border: 1px solid; border-radius: 8px; padding: 5px 12px; transition: color .5s, border-color .5s; }
+  .submit-topbtn { background: #ef444418; color: #ef4444; border: 1px solid #ef444444; border-radius: 8px; padding: 7px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Crimson Pro', serif; transition: background .2s; }
+  .submit-topbtn:hover { background: #ef444430; }
+  .timer-bar-bg { width: 100%; height: 3px; background: #0f1f35; }
+  .timer-bar-fill { height: 3px; transition: width 1s linear, background .5s; }
+
+  .test-layout { display: flex; gap: 18px; width: 100%; max-width: 1100px; padding: 20px 18px; }
+  @media(max-width:700px){ .test-layout{ flex-direction:column; } .nav-panel{ width:100%!important; position:static!important; } }
+
+  /* Q card */
+  .q-card { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px 30px; box-shadow: 0 24px 48px rgba(0,0,0,.4); }
+  .q-top-row { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+  .q-badge { font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 20px; border: 1px solid; font-family: 'JetBrains Mono', monospace; }
+  .q-topic-tag { font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 1px solid; }
+  .flag-btn { margin-left: auto; background: none; border: none; cursor: pointer; font-size: 13px; font-weight: 500; padding: 4px 8px; font-family: 'Crimson Pro', serif; transition: color .2s; }
+  .q-text { font-size: 17px; line-height: 1.75; color: var(--text); margin-bottom: 22px; }
+  .opts { display: flex; flex-direction: column; gap: 9px; }
+  .opt-btn { display: flex; align-items: center; gap: 13px; border: 1px solid; border-radius: 11px; padding: 13px 16px; text-align: left; font-size: 14px; line-height: 1.5; cursor: pointer; background: #0a1628; color: #94a3b8; font-family: 'Crimson Pro', serif; transition: background .18s, border-color .18s, color .18s; width: 100%; }
+  .opt-btn:hover:not(.revealed) { background: rgba(255,255,255,.04); }
+  .opt-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; transition: all .18s; font-family: 'JetBrains Mono', monospace; }
+  .opt-txt { flex: 1; }
+  .opt-icon { margin-left: auto; font-size: 16px; }
+
+  .nav-row { display: flex; gap: 10px; margin-top: 22px; }
+  .nav-btn { background: var(--card2); border: 1px solid var(--border2); color: var(--muted); border-radius: 10px; padding: 10px 20px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'Crimson Pro', serif; transition: background .2s; }
+  .nav-btn:hover { background: #1e293b; }
+  .nav-btn:disabled { opacity: .35; cursor: default; }
+  .check-btn { flex: 1; background: transparent; border: 1px solid; border-radius: 10px; padding: 10px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'Crimson Pro', serif; transition: all .2s; }
+  .finish-btn { background: #84cc1618; border-color: #84cc16; color: #84cc16; }
+
+  /* Nav panel */
+  .nav-panel { width: 196px; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; position: sticky; top: 72px; align-self: flex-start; }
+  .nav-section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+  .nav-sec-title { font-size: 10px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; display: block; }
+  .nav-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+  .nav-dot { aspect-ratio: 1; border-radius: 5px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; border: 1px solid; position: relative; transition: all .15s; background: #0d1b2a; border-color: var(--border); color: var(--dim); font-family: 'JetBrains Mono', monospace; }
+  .nav-dot .flag-indicator { position: absolute; top: -3px; right: -3px; font-size: 7px; line-height: 1; }
+  .leg-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+  .leg-dot { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
+  .leg-lbl { font-size: 11px; color: var(--dim); }
+  .prog-bar-bg { height: 6px; background: #0f2040; border-radius: 3px; overflow: hidden; margin-bottom: 5px; }
+  .prog-bar-fill { height: 6px; background: linear-gradient(90deg, #06b6d4, #3b82f6); border-radius: 3px; transition: width .3s; }
+  .prog-txt { font-size: 11px; color: var(--dim); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── RESULTS ── */
+  #s-results { flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 20px; }
+  .results-wrap { max-width: 860px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media(max-width:600px){ .results-wrap{ grid-template-columns:1fr; } }
+  .res-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+  .res-label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+  .res-big { font-size: 72px; font-weight: 700; line-height: 1; font-family: 'JetBrains Mono', monospace; }
+  .res-of { font-size: 28px; color: #1e293b; }
+  .res-grade { font-size: 20px; font-weight: 600; margin-top: 6px; margin-bottom: 16px; }
+  .res-pct-bar { height: 8px; background: #0f2040; border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+  .res-pct-fill { height: 8px; border-radius: 4px; transition: width 1s ease; }
+  .res-pct-txt { font-size: 12px; color: var(--muted); margin-bottom: 24px; font-family: 'JetBrains Mono', monospace; }
+  .res-btn-col { display: flex; flex-direction: column; gap: 10px; }
+  .review-btn { background: var(--card2); border: 1px solid var(--border2); color: #94a3b8; border-radius: 10px; padding: 12px; font-size: 14px; cursor: pointer; font-family: 'Crimson Pro', serif; transition: background .2s; }
+  .review-btn:hover { background: #1e293b; }
+  .retake-btn { background: linear-gradient(135deg, #f97316, #ec4899); border: none; color: #fff; border-radius: 10px; padding: 12px; font-size: 14px; cursor: pointer; font-family: 'Crimson Pro', serif; font-weight: 600; transition: opacity .2s; }
+  .retake-btn:hover { opacity: .88; }
+  .tb-row { margin-bottom: 16px; }
+  .tb-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .tb-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .tb-name { font-size: 13px; color: #94a3b8; flex: 1; }
+  .tb-score { font-size: 13px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+  .tb-bar-bg { height: 5px; background: #0f2040; border-radius: 3px; overflow: hidden; }
+  .tb-bar-fill { height: 5px; border-radius: 3px; transition: width 1s ease; }
+
+  /* ── REVIEW ── */
+  #s-review { flex-direction: column; align-items: center; padding: 24px 20px; min-height: 100vh; }
+  .rev-wrap { width: 100%; max-width: 760px; }
+  .rev-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .rev-title { font-size: 22px; font-weight: 700; }
+  .back-btn { background: var(--card); border: 1px solid var(--border2); color: var(--muted); border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; font-family: 'Crimson Pro', serif; }
+  .rev-q { background: var(--card); border-left: 4px solid; border-radius: 0 12px 12px 0; padding: 18px 20px; margin-bottom: 12px; }
+  .rev-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .rev-num { font-size: 11px; font-weight: 700; color: #334155; font-family: 'JetBrains Mono', monospace; }
+  .rev-topic-tag { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+  .rev-status { margin-left: auto; font-size: 12px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+  .rev-qtxt { font-size: 14px; color: #cbd5e1; line-height: 1.6; margin-bottom: 12px; }
+  .rev-opts { display: flex; flex-direction: column; gap: 5px; }
+  .rev-opt { display: flex; align-items: center; gap: 8px; border: 1px solid; border-radius: 7px; padding: 8px 12px; font-size: 13px; font-family: 'Crimson Pro', serif; }
+  .rev-letter { font-weight: 700; width: 16px; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
+  .rev-opt-txt { flex: 1; }
+  .rev-opt-badge { font-size: 11px; margin-left: 8px; font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ INTRO ═══════════════ -->
+<div id="s-intro" class="screen active">
+  <div class="intro-wrap">
+    <div>
+      <div class="badge">PREDICTED EXAM</div>
+      <h1 class="intro-h1">ENGG 111</h1>
+      <h2 class="intro-h2">Engineering Science</h2>
+      <p class="intro-desc">Full Section A practice — 50 MCQs covering all five exam topics, based on analysis of past TU exam papers.</p>
+      <div class="intro-stats">
+        <div class="istat"><span class="istat-val">50</span><span class="istat-lbl">Questions</span></div>
+        <div class="istat"><span class="istat-val">50m</span><span class="istat-lbl">Time Limit</span></div>
+        <div class="istat"><span class="istat-val">1</span><span class="istat-lbl">Mark Each</span></div>
+        <div class="istat"><span class="istat-val">None</span><span class="istat-lbl">Negative Marking</span></div>
+      </div>
+      <button class="start-btn" onclick="startTest()">Begin Test →</button>
+    </div>
+    <div>
+      <p class="topics-title">Topics Covered</p>
+      <div id="topic-cards"></div>
+      <div class="tip-box">
+        <span style="font-size:16px;flex-shrink:0;margin-top:1px">💡</span>
+        <span class="tip-text">Use <strong>Check Answer</strong> to reveal correct answers while practising. Flag tricky questions with 🚩 and revisit via the navigator.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TEST ═══════════════ -->
+<div id="s-test" class="screen">
+  <div class="topbar">
+    <div>
+      <div class="top-info-title">ENGG 111 — 50 Question MCQ</div>
+      <div class="top-info-sub" id="top-sub">0/50 answered · 0 flagged</div>
+    </div>
+    <div class="timer" id="timer">50:00</div>
+    <button class="submit-topbtn" onclick="submitTest()">Submit All</button>
+  </div>
+  <div class="timer-bar-bg"><div class="timer-bar-fill" id="timer-bar" style="width:100%;background:#06b6d4"></div></div>
+
+  <div class="test-layout">
+    <div class="q-card" id="q-card"><!-- rendered by JS --></div>
+    <div class="nav-panel">
+      <div class="nav-section">
+        <span class="nav-sec-title">Navigator</span>
+        <div class="nav-grid" id="nav-grid"></div>
+      </div>
+      <div class="nav-section">
+        <span class="nav-sec-title">Legend</span>
+        <div class="leg-row"><span class="leg-dot" style="background:#06b6d4"></span><span class="leg-lbl">Current</span></div>
+        <div class="leg-row"><span class="leg-dot" style="background:#334155"></span><span class="leg-lbl">Answered</span></div>
+        <div class="leg-row"><span class="leg-dot" style="background:#0d1b2a;border:1px solid #1e293b"></span><span class="leg-lbl">Unanswered</span></div>
+      </div>
+      <div class="nav-section">
+        <span class="nav-sec-title">Topics</span>
+        <div id="topic-legend"></div>
+      </div>
+      <div class="nav-section">
+        <span class="nav-sec-title">Progress</span>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-bar" style="width:0%"></div></div>
+        <div class="prog-txt" id="prog-txt">0 / 50 answered</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ RESULTS ═══════════════ -->
+<div id="s-results" class="screen">
+  <div class="results-wrap">
+    <div class="res-card">
+      <div class="res-label">Your Score</div>
+      <div class="res-big" id="res-score">--<span class="res-of">/50</span></div>
+      <div class="res-grade" id="res-grade">--</div>
+      <div class="res-pct-bar"><div class="res-pct-fill" id="res-pct-fill" style="width:0%"></div></div>
+      <div class="res-pct-txt" id="res-pct-txt">--</div>
+      <div class="res-btn-col">
+        <button class="review-btn" onclick="showScreen('review')">Review All Answers</button>
+        <button class="retake-btn" onclick="retake()">Retake Test</button>
+      </div>
+    </div>
+    <div class="res-card">
+      <div class="res-label" style="margin-bottom:18px">Topic Breakdown</div>
+      <div id="topic-breakdown"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ REVIEW ═══════════════ -->
+<div id="s-review" class="screen">
+  <div class="rev-wrap">
+    <div class="rev-header">
+      <h2 class="rev-title" id="rev-title">Answer Review</h2>
+      <button class="back-btn" onclick="showScreen('results')">← Results</button>
+    </div>
+    <div id="rev-list"></div>
+    <button class="back-btn" style="margin-top:16px;padding:12px 28px" onclick="showScreen('results')">← Back to Results</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════ */
+const TOPICS = {
+  "Mechanics":       { color: "#f97316", count: 15 },
+  "Thermodynamics":  { color: "#ec4899", count: 14 },
+  "Fluid Mechanics": { color: "#06b6d4", count: 12 },
+  "Construction":    { color: "#84cc16", count: 5  },
+  "Surveying":       { color: "#a78bfa", count: 9  },
+};
+
+const Q = [
+  // MECHANICS (15)
+  { q:"When two equal forces P act at right angles to each other, their resultant is:", o:["P","2P","√2 P","P/√2"], a:2, t:"Mechanics" },
+  { q:"The angle between two forces for their resultant to be maximum is:", o:["180°","90°","0°","45°"], a:2, t:"Mechanics" },
+  { q:"The angle between two forces for their resultant to be minimum is:", o:["0°","90°","180°","60°"], a:2, t:"Mechanics" },
+  { q:"A body is said to be in equilibrium when the algebraic sum of moments of all forces about any point is:", o:["Maximum","Minimum","Unity","Zero"], a:3, t:"Mechanics" },
+  { q:"Lami's theorem is applicable when a body is in equilibrium under how many concurrent coplanar forces?", o:["2","3","4","5"], a:1, t:"Mechanics" },
+  { q:"The unit of Young's Modulus of Elasticity in the SI system is:", o:["N/m","N/m²","N·m","N·m²"], a:1, t:"Mechanics" },
+  { q:"Hooke's Law states that stress is proportional to strain within the:", o:["Breaking point","Yield point","Elastic limit","Plastic limit"], a:2, t:"Mechanics" },
+  { q:"Which of the following statements about Hooke's Law is INCORRECT?", o:["Stress is proportional to strain","It is valid up to elastic limit","It applies to all ranges of loading","E = Stress/Strain"], a:2, t:"Mechanics" },
+  { q:"The centre of gravity of a semicircle of radius r from its base is located at:", o:["r/2","4r/3π","3r/4π","2r/π"], a:1, t:"Mechanics" },
+  { q:"The centre of gravity of a quarter circle of radius R from the centre is located at:", o:["4R/3π from each axis","R/2 from each axis","2R/3π from each axis","3R/4π from each axis"], a:0, t:"Mechanics" },
+  { q:"A pin (hinged) support provides how many reaction components?", o:["1","2","3","4"], a:1, t:"Mechanics" },
+  { q:"A fixed support provides how many reaction components?", o:["1","2","3","4"], a:2, t:"Mechanics" },
+  { q:"When two forces P and Q act at a point such that their resultant equals P, the angle between Q and the resultant is:", o:["0°","90°","60°","180°"], a:1, t:"Mechanics" },
+  { q:"The phenomenon of gradual increase in strain under constant stress over time is called:", o:["Fatigue","Creep","Relaxation","Plasticity"], a:1, t:"Mechanics" },
+  { q:"Poisson's ratio is defined as the ratio of:", o:["Longitudinal strain to lateral strain","Lateral strain to longitudinal strain","Stress to strain","Shear stress to shear strain"], a:1, t:"Mechanics" },
+
+  // THERMODYNAMICS (14)
+  { q:"Which of the following is an intensive thermodynamic property?", o:["Volume","Mass","Temperature","Internal energy"], a:2, t:"Thermodynamics" },
+  { q:"Which of the following is an extensive thermodynamic property?", o:["Pressure","Temperature","Density","Volume"], a:3, t:"Thermodynamics" },
+  { q:"An open thermodynamic system is one which allows transfer of:", o:["Energy only","Mass only","Both mass and energy","Neither mass nor energy"], a:2, t:"Thermodynamics" },
+  { q:"An isolated system allows transfer of:", o:["Mass only","Energy only","Both mass and energy","Neither mass nor energy"], a:3, t:"Thermodynamics" },
+  { q:"The zeroth law of thermodynamics defines the concept of:", o:["Entropy","Enthalpy","Temperature","Work"], a:2, t:"Thermodynamics" },
+  { q:"In a Diesel cycle, heat addition occurs at:", o:["Constant volume","Constant pressure","Constant temperature","Adiabatically"], a:1, t:"Thermodynamics" },
+  { q:"In a Diesel cycle, heat rejection occurs at:", o:["Constant pressure","Constant volume","Constant temperature","Adiabatically"], a:1, t:"Thermodynamics" },
+  { q:"The efficiency of a Carnot engine operating between T₁ (source) and T₂ (sink) is:", o:["T₂/T₁","1 − T₁/T₂","1 − T₂/T₁","T₁/T₂"], a:2, t:"Thermodynamics" },
+  { q:"To increase the efficiency of a Carnot engine, one should:", o:["Increase T₂ or decrease T₁","Decrease T₂ or increase T₁","Increase both T₁ and T₂","Decrease both T₁ and T₂"], a:1, t:"Thermodynamics" },
+  { q:"Absolute pressure equals:", o:["Gauge pressure − Atmospheric pressure","Gauge pressure + Atmospheric pressure","Atmospheric pressure − Gauge pressure","Gauge pressure × Atmospheric pressure"], a:1, t:"Thermodynamics" },
+  { q:"A process in which no heat is transferred to or from the system is called:", o:["Isothermal","Isobaric","Isochoric","Adiabatic"], a:3, t:"Thermodynamics" },
+  { q:"The Rankine cycle is used in:", o:["Gas turbines","Refrigerators","Steam power plants","IC engines"], a:2, t:"Thermodynamics" },
+  { q:"In the Brayton cycle, heat addition occurs at:", o:["Constant volume","Constant pressure","Constant temperature","Adiabatically"], a:1, t:"Thermodynamics" },
+  { q:"In the Otto cycle, heat addition and rejection both occur at:", o:["Constant pressure","Constant temperature","Constant volume","Adiabatically"], a:2, t:"Thermodynamics" },
+
+  // FLUID MECHANICS (12)
+  { q:"Newton's law of viscosity states that shear stress is proportional to:", o:["Velocity","Pressure gradient","Velocity gradient (du/dy)","Density"], a:2, t:"Fluid Mechanics" },
+  { q:"Kinematic viscosity is equal to:", o:["Dynamic viscosity × Density","Dynamic viscosity / Density","Density / Dynamic viscosity","Dynamic viscosity + Density"], a:1, t:"Fluid Mechanics" },
+  { q:"For a fluid at rest, the shear stress is:", o:["Maximum at boundaries","Proportional to velocity","Always zero","Equal to viscosity"], a:2, t:"Fluid Mechanics" },
+  { q:"The continuity equation A₁V₁ = A₂V₂ is based on the principle of conservation of:", o:["Energy","Momentum","Mass","Pressure"], a:2, t:"Fluid Mechanics" },
+  { q:"Which of the following is NOT a non-Newtonian fluid?", o:["Blood","Ink","Paste","Water"], a:3, t:"Fluid Mechanics" },
+  { q:"The Reynolds number for turbulent flow in a pipe is greater than:", o:["500","1000","2000","4000"], a:3, t:"Fluid Mechanics" },
+  { q:"Bernoulli's equation is based on the principle of conservation of:", o:["Mass","Momentum","Energy","Angular momentum"], a:2, t:"Fluid Mechanics" },
+  { q:"In pumps connected in parallel, if each delivers Q and H, the combined result is:", o:["Head=2H, Discharge=Q","Head=H, Discharge=2Q","Head=2H, Discharge=2Q","Head=H/2, Discharge=Q"], a:1, t:"Fluid Mechanics" },
+  { q:"In pumps connected in series, if each delivers Q and H, the combined result is:", o:["Head=H, Discharge=2Q","Head=2H, Discharge=Q","Head=2H, Discharge=2Q","Head=H, Discharge=Q"], a:1, t:"Fluid Mechanics" },
+  { q:"A Pelton wheel is an example of:", o:["Reaction turbine","Impulse turbine","Mixed flow turbine","Axial flow turbine"], a:1, t:"Fluid Mechanics" },
+  { q:"A Francis turbine is classified as:", o:["Impulse, axial flow","Reaction, mixed flow","Impulse, radial flow","Reaction, axial flow"], a:1, t:"Fluid Mechanics" },
+  { q:"Specific gravity of a fluid is the ratio of its density to the density of:", o:["Air at 0°C","Mercury at 0°C","Water at 4°C","Water at 100°C"], a:2, t:"Fluid Mechanics" },
+
+  // CONSTRUCTION (9)
+  { q:"The major constituent of a good building brick by weight is:", o:["Alumina","Silica","Lime","Iron oxide"], a:1, t:"Construction" },
+  { q:"Alumina content in a good brick is approximately:", o:["5–10%","20–30%","50–60%","70–80%"], a:1, t:"Construction" },
+  { q:"Water absorption for a first class brick should not exceed:", o:["10%","15%","20%","25%"], a:1, t:"Construction" },
+  { q:"M20 concrete mix ratio (Cement : Sand : Aggregate) is:", o:["1:2:4","1:1.5:3","1:3:6","1:1:2"], a:1, t:"Construction" },
+  { q:"43 Grade OPC cement achieves a compressive strength of 43 N/mm² at:", o:["7 days","14 days","28 days","90 days"], a:2, t:"Construction" },
+  { q:"Carbon content in cast iron ranges approximately from:", o:["0.02–0.8%","0.8–1.7%","1.7–4.5%","4.5–6.5%"], a:2, t:"Construction" },
+  { q:"Which of the following is a metamorphic rock?", o:["Granite","Sandstone","Gneiss","Basalt"], a:2, t:"Construction" },
+  { q:"Granite is classified as:", o:["Sedimentary rock","Metamorphic rock","Igneous rock","Alluvial rock"], a:2, t:"Construction" },
+  { q:"Which type of foundation is most suitable for very poor and waterlogged soils at great depths?", o:["Spread footing","Strip footing","Mat foundation","Well foundation"], a:3, t:"Construction" },
+
+  // SURVEYING (9)
+  { q:"The length of Gunter's chain is:", o:["33 feet","66 feet","100 feet","120 feet"], a:1, t:"Surveying" },
+  { q:"The length of the Engineer's chain is:", o:["33 feet","66 feet","100 feet","120 feet"], a:2, t:"Surveying" },
+  { q:"A theodolite is an instrument used to measure:", o:["Horizontal angles only","Vertical angles only","Both horizontal and vertical angles","Distances only"], a:2, t:"Surveying" },
+  { q:"The principle 'working from whole to part' in surveying means:", o:["Starting with detail surveys then overall","Establishing control points first, then detailing","Measuring offsets before chain lines","Using GPS before manual survey"], a:1, t:"Surveying" },
+  { q:"If the fore bearing of a line AB is 60°30', its back bearing is:", o:["60°30'","240°30'","119°30'","300°30'"], a:1, t:"Surveying" },
+  { q:"GIS stands for:", o:["General Information System","Geographic Information System","Geological Investigation System","Geodetic Instrument Survey"], a:1, t:"Surveying" },
+  { q:"GLONASS is the satellite navigation system of:", o:["USA","China","Russia","European Union"], a:2, t:"Surveying" },
+  { q:"Remote sensing that uses its own energy source to illuminate targets is called:", o:["Passive remote sensing","Active remote sensing","Thermal remote sensing","Multi-spectral sensing"], a:1, t:"Surveying" },
+  { q:"Contour interval is defined as:", o:["Horizontal distance between contour lines","Vertical distance between successive contour lines","The length of a contour line","The slope between two contour lines"], a:1, t:"Surveying" },
+];
+
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+let current = 0;
+let answers = new Array(50).fill(null);
+let flagged  = new Array(50).fill(false);
+let selected = null;
+let revealed = false;
+let timeLeft  = 50 * 60;
+let timerInterval = null;
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+(function init() {
+  // Topic cards on intro
+  const tc = document.getElementById('topic-cards');
+  Object.entries(TOPICS).forEach(([name, {color, count}]) => {
+    const pct = (count / 50 * 100).toFixed(0);
+    tc.innerHTML += `
+      <div class="topic-card" style="background:${color}12;border-color:${color}44">
+        <div class="topic-card-row">
+          <span class="topic-dot" style="background:${color}"></span>
+          <span class="topic-card-name">${name}</span>
+          <span class="topic-cnt" style="color:${color}">${count} Qs</span>
+        </div>
+        <div class="topic-mini-bar-bg">
+          <div class="topic-mini-bar" style="width:${pct}%;background:${color}"></div>
+        </div>
+      </div>`;
+  });
+
+  // Topic legend in test panel
+  const tl = document.getElementById('topic-legend');
+  Object.entries(TOPICS).forEach(([name, {color}]) => {
+    tl.innerHTML += `<div class="leg-row"><span class="leg-dot" style="background:${color}"></span><span class="leg-lbl">${name}</span></div>`;
+  });
+})();
+
+/* ═══════════════════════════════════════════════
+   SCREEN MANAGEMENT
+═══════════════════════════════════════════════ */
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('s-' + name).classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════
+   TIMER
+═══════════════════════════════════════════════ */
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitTest(); }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+  const s = String(timeLeft % 60).padStart(2, '0');
+  const el = document.getElementById('timer');
+  const bar = document.getElementById('timer-bar');
+  const pct = (timeLeft / (50*60)) * 100;
+  const col = timeLeft < 120 ? '#ef4444' : timeLeft < 300 ? '#f97316' : '#06b6d4';
+  el.textContent = `${m}:${s}`;
+  el.style.color = col;
+  el.style.borderColor = col + '66';
+  bar.style.width = pct + '%';
+  bar.style.background = col;
+}
+
+/* ═══════════════════════════════════════════════
+   START
+═══════════════════════════════════════════════ */
+function startTest() {
+  showScreen('test');
+  buildNavGrid();
+  renderQuestion();
+  startTimer();
+}
+
+/* ═══════════════════════════════════════════════
+   NAV GRID
+═══════════════════════════════════════════════ */
+function buildNavGrid() {
+  const grid = document.getElementById('nav-grid');
+  grid.innerHTML = '';
+  Q.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-dot';
+    btn.id = `nd-${i}`;
+    btn.textContent = i + 1;
+    btn.onclick = () => saveAndGo(i);
+    if (flagged[i]) {
+      const fi = document.createElement('span');
+      fi.className = 'flag-indicator';
+      fi.textContent = '🚩';
+      btn.appendChild(fi);
+    }
+    grid.appendChild(btn);
+  });
+  updateNavGrid();
+}
+
+function updateNavGrid() {
+  const answered = answers.filter(a => a !== null).length;
+  Q.forEach((q, i) => {
+    const btn = document.getElementById(`nd-${i}`);
+    if (!btn) return;
+    const col = TOPICS[q.t].color;
+    const isAns = answers[i] !== null || (i === current && selected !== null);
+    const isCur = i === current;
+    btn.style.background = isCur ? col : isAns ? col + '44' : '#0d1b2a';
+    btn.style.borderColor = isCur ? col : isAns ? col + '88' : '#1e293b';
+    btn.style.color = isCur ? '#0f172a' : isAns ? col : '#475569';
+    btn.style.fontWeight = isCur ? '700' : '400';
+    btn.style.boxShadow = isCur ? `0 0 8px ${col}88` : 'none';
+    // update flag
+    let fi = btn.querySelector('.flag-indicator');
+    if (flagged[i] && !fi) {
+      fi = document.createElement('span');
+      fi.className = 'flag-indicator';
+      fi.textContent = '🚩';
+      btn.appendChild(fi);
+    } else if (!flagged[i] && fi) {
+      fi.remove();
+    }
+  });
+  // top sub
+  const fc = flagged.filter(Boolean).length;
+  document.getElementById('top-sub').textContent = `${answered}/50 answered · ${fc} flagged`;
+  // progress
+  document.getElementById('prog-bar').style.width = (answered / 50 * 100) + '%';
+  document.getElementById('prog-txt').textContent = `${answered} / 50 answered`;
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER QUESTION
+═══════════════════════════════════════════════ */
+function renderQuestion() {
+  const q = Q[current];
+  const col = TOPICS[q.t].color;
+  const bg  = col + '18';
+
+  let optsHtml = '';
+  q.o.forEach((opt, oi) => {
+    let obg = '#0a1628', obc = '#1e293b', otc = '#94a3b8';
+    let circ_bg = 'transparent', circ_bc = obc, circ_tc = obc;
+    let icon = '';
+    const isSel = selected === oi;
+    const isCorr = oi === q.a;
+
+    if (isSel && !revealed) {
+      obg = col + '18'; obc = col; otc = '#f1f5f9';
+      circ_bg = col; circ_bc = col; circ_tc = '#0f172a';
+    }
+    if (revealed) {
+      if (isCorr)         { obg='#84cc1618'; obc='#84cc16'; otc='#84cc16'; circ_bg='#84cc16'; circ_bc='#84cc16'; circ_tc='#0f172a'; icon='<span class="opt-icon">✓</span>'; }
+      else if (isSel)     { obg='#ef444418'; obc='#ef4444'; otc='#ef4444'; circ_bg='#ef4444'; circ_bc='#ef4444'; circ_tc='#0f172a'; icon='<span class="opt-icon">✗</span>'; }
+      else                { obg='#0a1628';   obc='#1e293b'; otc='#475569'; circ_bg='transparent'; circ_bc='#1e293b'; circ_tc='#1e293b'; }
+    } else if (!isSel) {
+      circ_bg='transparent'; circ_bc='#1e293b'; circ_tc='#475569';
+    }
+
+    const letter = String.fromCharCode(65 + oi);
+    optsHtml += `
+      <button class="opt-btn${revealed?' revealed':''}"
+        style="background:${obg};border-color:${obc};color:${otc}"
+        onclick="${revealed ? '' : `selectOpt(${oi})`}">
+        <span class="opt-circle" style="background:${circ_bg};border-color:${circ_bc};color:${circ_tc}">${letter}</span>
+        <span class="opt-txt">${opt}</span>
+        ${icon}
+      </button>`;
+  });
+
+  const checkLabel = revealed ? 'Hide Answer' : 'Check Answer';
+  const checkOpacity = selected === null ? '0.4' : '1';
+  const checkColour = revealed ? '#84cc16' : col;
+
+  const isLast = current === 49;
+  const nextBtn = isLast
+    ? `<button class="nav-btn finish-btn" onclick="submitTest()">Finish ✓</button>`
+    : `<button class="nav-btn" onclick="saveAndGo(${current + 1})">Next →</button>`;
+
+  document.getElementById('q-card').innerHTML = `
+    <div class="q-top-row">
+      <span class="q-badge" style="background:${bg};color:${col};border-color:${col}44">
+        Question ${current + 1} <span style="opacity:.5">/ 50</span>
+      </span>
+      <span class="q-topic-tag" style="background:${bg};color:${col};border-color:${col}44">${q.t}</span>
+      <button class="flag-btn" id="flag-btn" style="color:${flagged[current] ? '#f97316' : '#334155'}"
+        onclick="toggleFlag()">${flagged[current] ? '🚩 Flagged' : '⚑ Flag'}</button>
+    </div>
+    <p class="q-text">${q.q}</p>
+    <div class="opts">${optsHtml}</div>
+    <div class="nav-row">
+      <button class="nav-btn" onclick="saveAndGo(${current - 1})" ${current === 0 ? 'disabled' : ''}>← Prev</button>
+      <button class="check-btn" style="border-color:${checkColour};color:${checkColour};opacity:${checkOpacity}"
+        onclick="checkAnswer()">${checkLabel}</button>
+      ${nextBtn}
+    </div>`;
+
+  updateNavGrid();
+}
+
+/* ═══════════════════════════════════════════════
+   INTERACTIONS
+═══════════════════════════════════════════════ */
+function selectOpt(oi) {
+  selected = oi;
+  renderQuestion();
+}
+
+function checkAnswer() {
+  if (selected === null) return;
+  revealed = !revealed;
+  renderQuestion();
+}
+
+function toggleFlag() {
+  flagged[current] = !flagged[current];
+  renderQuestion();
+}
+
+function saveAndGo(idx) {
+  if (idx < 0 || idx > 49) return;
+  answers[current] = selected;
+  current = idx;
+  selected = answers[idx];
+  revealed = false;
+  renderQuestion();
+}
+
+/* ═══════════════════════════════════════════════
+   SUBMIT
+═══════════════════════════════════════════════ */
+function submitTest() {
+  clearInterval(timerInterval);
+  answers[current] = selected;
+  showResults();
+}
+
+function showResults() {
+  const score = answers.filter((a, i) => a === Q[i].a).length;
+  const pct   = Math.round((score / 50) * 100);
+  const grade = pct >= 80 ? 'Distinction' : pct >= 60 ? 'First Division' : pct >= 45 ? 'Second Division' : pct >= 32 ? 'Pass' : 'Fail';
+  const gcol  = pct >= 80 ? '#84cc16' : pct >= 60 ? '#06b6d4' : pct >= 45 ? '#f97316' : pct >= 32 ? '#facc15' : '#ef4444';
+  const skipped = answers.filter(a => a === null).length;
+
+  document.getElementById('res-score').innerHTML = `<span style="color:${gcol}">${score}</span><span class="res-of">/50</span>`;
+  document.getElementById('res-grade').textContent = grade;
+  document.getElementById('res-grade').style.color = gcol;
+  document.getElementById('res-pct-fill').style.width = pct + '%';
+  document.getElementById('res-pct-fill').style.background = gcol;
+  document.getElementById('res-pct-txt').textContent = `${pct}% — ${score} correct · ${50-score-skipped} wrong · ${skipped} skipped`;
+
+  // Topic breakdown
+  const tb = document.getElementById('topic-breakdown');
+  tb.innerHTML = '';
+  Object.entries(TOPICS).forEach(([name, {color}]) => {
+    const qs = Q.map((q,i) => ({...q,i})).filter(q => q.t === name);
+    const correct = qs.filter(q => answers[q.i] === q.a).length;
+    const tp = Math.round((correct / qs.length) * 100);
+    tb.innerHTML += `
+      <div class="tb-row">
+        <div class="tb-top">
+          <span class="tb-dot" style="background:${color}"></span>
+          <span class="tb-name">${name}</span>
+          <span class="tb-score" style="color:${color}">${correct}/${qs.length}</span>
+        </div>
+        <div class="tb-bar-bg">
+          <div class="tb-bar-fill" style="width:${tp}%;background:${color}"></div>
+        </div>
+      </div>`;
+  });
+
+  showScreen('results');
+}
+
+/* ═══════════════════════════════════════════════
+   REVIEW
+═══════════════════════════════════════════════ */
+function buildReview() {
+  const score = answers.filter((a, i) => a === Q[i].a).length;
+  document.getElementById('rev-title').textContent = `Answer Review — ${score}/50 Correct`;
+  const list = document.getElementById('rev-list');
+  list.innerHTML = '';
+
+  Q.forEach((q, i) => {
+    const ua    = answers[i];
+    const ok    = ua === q.a;
+    const skip  = ua === null;
+    const col   = TOPICS[q.t].color;
+    const lcol  = skip ? '#475569' : ok ? '#84cc16' : '#ef4444';
+    const stxt  = skip ? '⊘ Skipped' : ok ? '✓ Correct' : '✗ Wrong';
+
+    let optsHtml = '';
+    q.o.forEach((opt, oi) => {
+      const isCorr = oi === q.a;
+      const isUser = oi === ua && !ok;
+      const bg  = isCorr ? '#84cc1618' : isUser ? '#ef444418' : 'transparent';
+      const bc  = isCorr ? '#84cc16'   : isUser ? '#ef4444'   : '#1e293b';
+      const tc  = isCorr ? '#84cc16'   : isUser ? '#ef4444'   : '#64748b';
+      const badge = isCorr ? '<span class="rev-opt-badge">✓ Correct Answer</span>'
+                 : isUser  ? '<span class="rev-opt-badge">Your answer</span>' : '';
+      optsHtml += `
+        <div class="rev-opt" style="background:${bg};border-color:${bc};color:${tc}">
+          <span class="rev-letter">${String.fromCharCode(65+oi)}</span>
+          <span class="rev-opt-txt">${opt}</span>
+          ${badge}
+        </div>`;
+    });
+
+    list.innerHTML += `
+      <div class="rev-q" style="border-left-color:${lcol}">
+        <div class="rev-meta">
+          <span class="rev-num">Q${i+1}</span>
+          <span class="rev-topic-tag" style="background:${col}20;color:${col}">${q.t}</span>
+          <span class="rev-status" style="color:${lcol}">${stxt}</span>
+        </div>
+        <p class="rev-qtxt">${q.q}</p>
+        <div class="rev-opts">${optsHtml}</div>
+      </div>`;
+  });
+}
+
+// Override showScreen to build review lazily
+const _origShow = showScreen;
+window.showScreen = function(name) {
+  if (name === 'review') buildReview();
+  _origShow(name);
+};
+
+/* ═══════════════════════════════════════════════
+   RETAKE
+═══════════════════════════════════════════════ */
+function retake() {
+  clearInterval(timerInterval);
+  current  = 0;
+  answers  = new Array(50).fill(null);
+  flagged  = new Array(50).fill(false);
+  selected = null;
+  revealed = false;
+  timeLeft = 50 * 60;
+  updateTimerDisplay();
+  buildNavGrid();
+  renderQuestion();
+  startTimer();
+  _origShow('test');
+}
+</script>
+</body>
+</html>
